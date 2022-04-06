@@ -1,0 +1,146 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Serve index page from public directory
+GET           /                                          controllers.FrontendController.index()
+
+# An example route (Prefix all API routes with apiPrefix defined in application.conf)
+POST          /api/auth                                  controllers.AuthController.auth(request: Request)
+POST          /api/auth/as                               controllers.AuthController.authAs(request: Request)
+
+POST          /api/pin/code                              controllers.AuthController.sendPinCode(request: Request)
+POST          /api/register                              controllers.AuthController.register(request: Request)
+
+POST          /api/auth/pin                              controllers.AuthController.authWithPinCode(request: Request)
+POST          /api/auth/send/pin/code                    controllers.AuthController.sendPinCodeForLogin(request: Request)
+
+POST          /api/data/records/count                    controllers.MakeMyDataController.getRecordsCount(request: Request)
+POST          /api/data/records/purchase                 controllers.MakeMyDataController.purchaseRecords(request: Request)
+POST          /api/data/campaigns                        controllers.MakeMyDataController.campaignsList(request: Request)
+
+POST          /api/reset/password/pin/code               controllers.AuthController.sendResetPasswordPinCode(request: Request)
+POST          /api/reset/password                        controllers.AuthController.resetPassword(request: Request)
+
+POST          /api/senders                               controllers.SendersController.senders(request: Request)
+POST          /api/sender                                controllers.SendersController.addSender(request: Request)
+DELETE        /api/sender/:id                            controllers.SendersController.removeSender(id: Long)
+
+POST          /api/sender/groups                         controllers.SendersController.senderGroups(request: Request)
+POST          /api/sender/group                          controllers.SendersController.addSenderGroup(request: Request)
+DELETE        /api/sender/group/:id                      controllers.SendersController.removeSenderGroup(id: Long)
+GET           /api/group/senders/:id                     controllers.SendersController.getSendersForGroup(id: Long)
+
+POST          /api/lists                                 controllers.ListsController.lists(request: Request)
+DELETE        /api/list/:id                              controllers.ListsController.removeList(id: Long)
+
+POST          /api/lists/:id                             controllers.ListsController.uploadListFile(id: Long, request: Request)
+GET           /api/lists/:id                             controllers.ListsController.downloadListFile(id: Long)
+
+POST          /api/campaign/statistics                   controllers.CampaignsController.statistics(request: Request)
+POST          /api/campaign/agent                        controllers.CampaignsController.updateAgentCredentials(request: Request)
+
+POST          /api/campaigns                             controllers.CampaignsController.campaigns(request: Request)
+POST          /api/campaign                              controllers.CampaignsController.addCampaign(request: Request)
+DELETE        /api/campaign/:id                          controllers.CampaignsController.removeCampaign(id: Long)
+
+GET           /api/campaign/lists/:id                    controllers.CampaignsController.listsForCampaign(id: Long)
+POST          /api/campaign/lists                        controllers.CampaignsController.updateListsForCampaign(request: Request)
+
+POST          /api/campaign/start                        controllers.CampaignsController.startCampaign(request: Request)
+POST          /api/campaign/stop                         controllers.CampaignsController.stopCampaign(request: Request)
+
+POST          /api/phones                                controllers.CampaignsController.phones(request: Request)
+POST          /api/phones/removed                        controllers.CampaignsController.removedPhones(request: Request)
+GET           /api/phones/removed                        controllers.CampaignsController.exportRemovedPhones(request: Request)
+POST          /api/phones/search                         controllers.CampaignsController.searchPhones(request: Request)
+
+POST          /api/phones/buy                            controllers.CampaignsController.buyPhones(request: Request)
+DELETE        /api/phones/:id                            controllers.CampaignsController.removePhone(id: Long)
+POST          /api/phones/free                           controllers.CampaignsController.freePhones(request: Request)
+PUT           /api/phones                                controllers.CampaignsController.updatePhone(request: Request)
+POST          /api/phones/forwarding                     controllers.CampaignsController.updatePhonesForwarding(request: Request)
+
+POST          /api/chats                                 controllers.CampaignsController.chats(request: Request)
+GET           /api/chats/messages/:id                    controllers.CampaignsController.chatMessages(request: Request, id: Long)
+POST          /api/chats/message                         controllers.CampaignsController.sendMessage(request: Request)
+DELETE        /api/chats/:id                             controllers.CampaignsController.removeChat(request: Request, id: Long)
+GET           /api/chats/ban/:id                         controllers.ListsController.banChat(request: Request, id: Long)
+
+GET           /api/chats/export                          controllers.CampaignsController.exportUsersToFile(request: Request)
+GET           /api/chats/export/:path                    controllers.CampaignsController.downloadExportedUsersFile(request: Request, path: String)
+
+GET           /api/campaign/phones/:id                   controllers.CampaignsController.getCampaignPhones(id: Long)
+POST          /api/campaign/message/test                 controllers.CampaignsController.sendTestSMS(request: Request)
+
+POST          /api/inbound                               controllers.CampaignsController.saveInboundMessage(request: Request)
+POST          /api/v2/inbound                            controllers.CampaignsController.parseAndSaveInboundMessage(request: Request)
+GET           /api/carrier/:phone                        controllers.CampaignsController.getCarrierInfo(phone: Long)
+
+POST          /api/outbond/status                        controllers.CampaignsController.messageStatus(request: Request)
+
+POST          /api/forward                               controllers.SystemController.phoneForward(request: Request)
+POST          /api/forward/twilio                        controllers.SystemController.phoneForwardTwilio(request: Request)
+
+POST          /api/dnc/lists                             controllers.ListsController.DNCLists(request: Request)
+
+PUT           /api/dnc/lists/master                      controllers.ListsController.uploadMasterDNCListFile(request: Request)
+
+POST          /api/dnc/lists/:id                         controllers.ListsController.uploadDNCListFile(id: Long, request: Request)
+GET           /api/dnc/lists/:id                         controllers.ListsController.downloadDNCListFile(id: Long)
+POST          /api/dnc/phones                            controllers.ListsController.addDNCPhones(request: Request)
+
+
+GET           /api/campaign/errors/:id                   controllers.CampaignsController.getCampaignErrors(id: Long)
+GET           /api/campaign/reset/error/:id              controllers.CampaignsController.resetErrorStatus(id: Long)
+
+GET           /api/resellers                             controllers.UsersController.resellers(request: Request)
+
+POST          /api/users                                 controllers.UsersController.users(request: Request)
+PUT           /api/users                                 controllers.UsersController.updateUser(request: Request)
+POST          /api/users/fund                            controllers.UsersController.addFund(request: Request)
+GET           /api/user/balance/:id                      controllers.UsersController.userBalance(request: Request, id: Long)
+GET           /api/user/manage/money/:id                 controllers.UsersController.userManageMoneyDetails(request: Request, id: Long)
+GET           /api/user/messages/balance/:id             controllers.UsersController.userMessagesAndBalance(request: Request, id: Long)
+GET           /api/user/settings/:id                     controllers.UsersController.userSettings(id: Long)
+GET           /api/user/ui/settings/:id                  controllers.UsersController.userUISettings(id: Long)
+DELETE        /api/users/:id                             controllers.UsersController.removeUser(id: Long)
+POST          /api/users/timezone                        controllers.UsersController.updateUserTimeZone(request: Request)
+
+GET           /api/users/messages/:id                    controllers.UsersController.userMessages(id: Long)
+POST          /api/users/message                         controllers.UsersController.sendMessageToUser(request: Request)
+DELETE        /api/users/message/:id                     controllers.UsersController.deleteMessage(id: Long)
+GET           /api/users/reset/messages                  controllers.UsersController.resetReadMessages(request: Request)
+
+POST          /api/users/export                          controllers.UsersController.exportUsersToFile(request: Request)
+GET           /api/users/export/:path                    controllers.UsersController.downloadExportedUsersFile(request: Request, path: String)
+
+POST          /api/payments                              controllers.UsersController.payments(request: Request)
+
+POST          /api/auto/reply                            controllers.UsersController.updateAutoReply(request: Request)
+POST          /api/auto/replies                          controllers.UsersController.autoReplies(request: Request)
+DELETE        /api/auto/reply/:id                        controllers.UsersController.removeAutoReply(id: Long)
+
+POST          /api/transactions                          controllers.UsersController.transactions(request: Request)
+POST          /api/transactions/all                      controllers.UsersController.allTransactions(request: Request)
+POST          /api/transactions/statistics               controllers.UsersController.transactionsStatistics(request: Request)
+POST          /api/transactions/statistics/daily         controllers.UsersController.dailyStatistics(request: Request)
+
+GET           /api/notes                                 controllers.UsersController.notes(request: Request)
+POST          /api/notes                                 controllers.UsersController.updateNote(request: Request)
+DELETE        /api/notes/:id                             controllers.UsersController.deleteNote(id: Long)
+
+
+GET           /api/configuring/settings/:id/:type        controllers.SystemController.configuringSettings(id: Long, type: String)
+GET           /api/settings/:id                          controllers.SystemController.settings(id: Long)
+POST          /api/settings                              controllers.SystemController.updateSetting(request: Request)
+GET           /api/date                                  controllers.SystemController.currentDate()
+
+POST          /api/change/password                       controllers.AccountController.changePassword(request: Request)
+POST          /api/add/payment                           controllers.AccountController.addPayment(request: Request)
+
+PUT           /api/kyc                                   controllers.KycInfoController.updateOrInsertKycInfo(request: Request)
+GET           /api/kyc                                   controllers.KycInfoController.getKycInfo(request: Request)
+
+# Serve static assets under public directory
+GET           /*file                                     controllers.FrontendController.assetOrDefault(file)

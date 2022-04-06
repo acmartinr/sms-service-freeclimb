@@ -1,0 +1,31 @@
+.users-action-cell {
+  width: 290px;
+}
+
+.users-small-action-cell {
+  width: 230px;
+}
+
+.user-search-with-button {
+  width: calc(100% - 120px) !important;
+  display: inline-block;
+}
+
+.users-export-button {
+  float: right;
+  margin-top: 28px !important;
+}
+
+.sort-arrow {
+  padding-left: 10px;
+}
+
+.user-blocked {
+  color: red !important;
+  font-weight: bold !important;
+}
+
+.user-disabled {
+  color: orange !important;
+  font-weight: bold !important;
+}

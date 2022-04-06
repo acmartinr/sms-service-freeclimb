@@ -1,0 +1,94 @@
+.change-password-title {
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding-top: 20px;
+  display: block;
+}
+
+.account-spacer {
+  height: 10px;
+}
+
+.account-large-spacer {
+  height: 30px;
+}
+
+.account-amount-input {
+  display: inline-block;
+  margin-right: 10px !important;
+  width: 100px;
+}
+
+.account-card-wrapper {
+  display: inline-block;
+  margin-right: 10px;
+  width: calc(100% - 240px);
+  vertical-align: bottom;
+  background: white;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #919191;
+  min-height: 42px;
+}
+
+.account-payment-button {
+  display: inline-block !important;
+  vertical-align: bottom !important;
+}
+
+.change-password-button-wrapper {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.label-success {
+  color: #007f01;
+}
+
+.amount-error {
+  color: red;
+  margin-top: 5px;
+  display: block;
+}
+
+.timezone-picker {
+  width: 100%;
+  padding-top: 10px;
+}
+
+.timezone-picker input {
+  font-size: 1rem !important;
+  color: currentColor;
+  width: 100%;
+  display: block;
+  background: none;
+  background: none !important;
+  border-top: none! important;
+  border-left: none! important;
+  border-right: none! important;
+  border-bottom: 1px solid #919191 !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.timezone-picker li button {
+  background: white !important;
+  padding: 7px 5px !important;
+  font: inherit !important;
+}
+
+.timezone-picker ul {
+  z-index: 100;
+}
+
+.header-subtitle-successful {
+  color: lawngreen;
+  margin-left: 5px;
+  font-size: medium;
+}
+
+.header-subtitle-wrong {
+  color: red;
+  margin-left: 5px;
+  font-size: medium;
+}

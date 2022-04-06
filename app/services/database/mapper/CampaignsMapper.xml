@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="services.database.mapper.CampaignsMapper">
+
+    <delete id="removeSendersFromGroup">
+        DELETE FROM senderGroupItems WHERE groupId=#{id}
+    </delete>
+
+    <insert id="insertSendersIntoGroup">
+        INSERT INTO senderGroupItems(groupId, senderId) VALUES
+        <foreach item="sender" collection="senders" separator=",">
+            (#{id}, #{sender.id})
+        </foreach>
+    </insert>
+
+    <insert id="insertSenderGroup" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO senderGroups(userId, name, date) VALUES (#{userId}, #{name}, #{date})
+    </insert>
+
+    <insert id="insertList" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO lists(userId, name, date, cnt, sentCount) VALUES (#{userId}, #{name}, #{date}, #{cnt}, #{sentCount})
+    </insert>
+
+    <select id="getSenderGroupsByRequest" resultType="SenderGroup">
+        SELECT senderGroups.id, senderGroups.name, senderGroups.date, count(senderGroupItems.senderId) as sendersCount FROM
+        senderGroups JOIN senderGroupItems ON senderGroups.id=senderGroupItems.groupId
+        WHERE userId=#{userId}
+        GROUP BY senderGroups.id
+        ORDER by date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <insert id="insertCampaign" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO campaigns(name, message, status, senderType, senderGroup, userId, leadsCount,
+                              sentCount, date, startDate, endDate, startTime, endTime, startLocalTime,
+                              endLocalTime, monday, tuesday, wednesday, thursday, friday, saturday, sunday,
+                              filterDNC,campaigntype)
+        VALUES (#{name}, #{message}, #{status}, #{senderType}, #{senderGroup}, #{userId}, #{leadsCount},
+                #{sentCount}, #{date}, #{startDate}, #{endDate}, #{startTime}, #{endTime}, #{startLocalTime},
+                #{endLocalTime}, #{monday}, #{tuesday}, #{wednesday}, #{thursday}, #{friday}, #{saturday}, #{sunday},
+                #{filterDNC},#{campaigntype})
+    </insert>
+
+    <update id="updateCampaign">
+        UPDATE campaigns set name=#{name}, message=#{message}, senderType=#{senderType}, senderGroup=#{senderGroup},
+                             startDate=#{startDate}, endDate=#{endDate}, startTime=#{startTime}, endTime=#{endTime},
+                             startLocalTime=#{startLocalTime}, endLocalTime=#{endLocalTime}, monday=#{monday},
+                             tuesday=#{tuesday}, wednesday=#{wednesday}, thursday=#{thursday}, friday=#{friday},
+                             saturday=#{saturday}, sunday=#{sunday}, status=#{status}, agentUsername=#{agentUsername},
+                             agentPassword=#{agentPassword}, filterDNC=#{filterDNC},campaigntype=#{campaigntype}
+        WHERE id=#{id}
+    </update>
+
+    <select id="getCampaignsByRequest" resultType="Campaign">
+        SELECT * FROM campaigns WHERE
+        <if test="agentUsername != null">
+            agentUsername=#{agentUsername}
+        </if>
+        <if test="agentUsername == null">
+            userId=#{userId}
+        </if>
+        AND date>#{dateFrom} AND date&lt;#{dateTo}
+        ORDER by date DESC LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getCampaignsCountByRequest" resultType="Integer">
+        SELECT count(id) FROM campaigns WHERE
+        <if test="agentUsername != null">
+            agentUsername=#{agentUsername}
+        </if>
+        <if test="agentUsername == null">
+            userId=#{userId}
+        </if>
+    </select>
+
+    <select id="getVisibleChatsByRequest" resultType="Chat">
+        SELECT * FROM chats_${userId} WHERE
+        <if test="campaignId != null">
+            campaignId=#{campaignId}
+        </if>
+        <if test="campaignId == null">
+            userId=#{userId}
+        </if>
+        <if test="phoneFrom != null">
+            AND phoneTo=#{phoneFrom}
+        </if>
+        AND hasInbound=true ORDER BY lastDate DESC
+        <if test="limit > 0">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getVisibleChatsCountByRequest" resultType="Integer">
+        SELECT count(id) FROM chats_${userId} WHERE
+        <if test="campaignId != null">
+            campaignId=#{campaignId}
+        </if>
+        <if test="campaignId == null">
+            userId=#{userId}
+        </if>
+        <if test="phoneFrom != null">
+            AND phoneTo=#{phoneFrom}
+        </if>
+        AND hasInbound=true
+    </select>
+
+    <insert id="insertListsForCampaign">
+        INSERT INTO campaignsLists(campaignId, listId) VALUES
+        <foreach item="list" collection="lists" separator=",">
+            (#{id}, #{list.id})
+        </foreach>
+    </insert>
+
+    <insert id="insertPhones">
+        INSERT INTO phones(userId, phone, date) VALUES
+        <foreach item="phone" collection="formattedPhones" separator=",">
+            (#{userId}, #{phone}, #{date})
+        </foreach>
+    </insert>
+
+    <insert id="insertDNCListPhones">
+        INSERT INTO dncListItems(listId, phone) VALUES
+        <foreach item="phone" collection="phones" separator=",">
+            (#{list.id}, #{phone})
+        </foreach>
+    </insert>
+
+    <insert id="insertChat" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO chats_${userId}(userId, campaignId, phoneTo, phoneFrom) VALUES (#{userId}, #{campaignId}, #{phoneTo}, #{phoneFrom})
+    </insert>
+
+    <insert id="copyChat" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO chats_${userId}(userId, campaignId, phoneTo, phoneFrom, carrier, lastDate, lastMessage, read, hasInbound)
+        VALUES (#{userId}, #{campaignId}, #{phoneTo}, #{phoneFrom}, #{carrier}, #{lastDate}, #{lastMessage}, #{read}, #{hasInbound})
+    </insert>
+
+    <insert id="insertPhonesForCampaign">
+        INSERT INTO campaignPhones(campaignId, phoneId) VALUES
+        <foreach item="phone" collection="selectedPhones" separator=",">
+            (#{id}, #{phone.id})
+        </foreach>
+    </insert>
+
+    <select id="getVisibleChatsWithLastInboundMessagesByUserId" resultType="Chat">
+        SELECT chats_${userId}.id, chats_${userId}.phoneFrom, chats_${userId}.phoneTo,
+        chatMessages_${userId}.message as lastMessage, chatMessages_${userId}.date as lastDate
+        FROM chats_${userId}
+        JOIN chatMessages_${userId} ON chatMessages_${userId}.chatId=chats_${userId}.id
+        AND chatMessages_${userId}.inbound=true
+        WHERE chats_${userId}.userId=#{userId} AND chats_${userId}.hasInbound=true
+        ORDER BY chatMessages_${userId}.date DESC
+    </select>
+    
+    <update id="createUserChatsTable">
+        CREATE TABLE chats_${id} (
+            id serial NOT NULL CONSTRAINT chat_${id}_pr_key PRIMARY KEY,
+            userId int NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            phoneFrom bigint,
+            phoneTo bigint,
+            lastDate bigint,
+            lastMessage text,
+            read bool NOT NULL DEFAULT true,
+            hasInbound boolean DEFAULT false NOT NULL,
+            campaignId integer,
+            carrier character varying(100)
+        );
+    </update>
+    
+    <update id="createUserChatMessagesTable">
+        CREATE TABLE chatMessages_${id} (
+            id serial NOT NULL CONSTRAINT chat_messages_${id}_pr_key PRIMARY KEY,
+            chatId int NOT NULL REFERENCES chats_${id}(id) ON DELETE CASCADE,
+            inbound bool,
+            externalId varchar(36),
+            read bool NOT NULL DEFAULT true,
+            date bigint,
+            message text,
+            phoneFrom bigint,
+            manual boolean DEFAULT false NOT NULL
+        );
+    </update>
+
+
+</mapper>
+

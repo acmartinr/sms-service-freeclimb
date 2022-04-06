@@ -1,0 +1,1367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="10.07.19-23:20" author="serfeo">
+        <comment>Create users table</comment>
+        <sql>
+            CREATE TABLE users
+            (
+                id       serial NOT NULL
+                    CONSTRAINT user_pr_key PRIMARY KEY,
+                username varchar(50),
+                role     int,
+                email    varchar(100),
+                password varchar(50),
+                CONSTRAINT user_name_key UNIQUE (username),
+                CONSTRAINT user_email_key UNIQUE (email)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE users;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="10.07.19-23:30" author="serfeo">
+        <comment>Create campaigns table</comment>
+        <sql>
+            CREATE TABLE campaigns
+            (
+                id             serial NOT NULL
+                    CONSTRAINT campaigns_pr_key PRIMARY KEY,
+                name           varchar(100),
+                message        text,
+                status         int,
+                senderType     int,
+                senderGroup    int,
+                userId         int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                leadsCount     int,
+                sentCount      bigint,
+                date           bigint,
+                startDate      bigint,
+                endDate        bigint,
+                startTime      int,
+                endTime        int,
+                startLocalTime int,
+                endLocalTime   int,
+                monday         bool,
+                tuesday        bool,
+                wednesday      bool,
+                thursday       bool,
+                friday         bool,
+                saturday       bool,
+                sunday         bool
+            );
+        </sql>
+        <rollback>
+            DROP TABLE campaigns;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="10.07.19-23:40" author="serfeo">
+        <comment>Create senders table</comment>
+        <sql>
+            CREATE TABLE senders
+            (
+                id        serial NOT NULL
+                    CONSTRAINT senders_pr_key PRIMARY KEY,
+                userId    int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                name      varchar(100),
+                phone     bigint,
+                sentCount bigint,
+                date      bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE senders;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="10.07.19-23:50" author="serfeo">
+        <comment>Create sender groups table</comment>
+        <sql>
+            CREATE TABLE senderGroups
+            (
+                id     serial NOT NULL
+                    CONSTRAINT sender_groups_pr_key PRIMARY KEY,
+                userId int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                name   varchar(100),
+                date   bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE senderGroups;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.07.19-00:00" author="serfeo">
+        <comment>Create sender group items table</comment>
+        <sql>
+            CREATE TABLE senderGroupItems
+            (
+                id       serial NOT NULL
+                    CONSTRAINT sender_group_items_pr_key PRIMARY KEY,
+                senderId int    NOT NULL REFERENCES senders (id) ON DELETE CASCADE,
+                groupId  int    NOT NULL REFERENCES senderGroups (id) ON DELETE CASCADE
+            );
+        </sql>
+        <rollback>
+            DROP TABLE senderGroupItems;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.07.19-00:10" author="serfeo">
+        <comment>Create lists table</comment>
+        <sql>
+            CREATE TABLE lists
+            (
+                id        serial NOT NULL
+                    CONSTRAINT lists_pr_key PRIMARY KEY,
+                userId    int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                date      bigint,
+                cnt       bigint,
+                name      varchar(100),
+                sentCount bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE lists;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.07.19-00:20" author="serfeo">
+        <comment>Create list items table</comment>
+        <sql>
+            CREATE TABLE listItems
+            (
+                id     serial NOT NULL
+                    CONSTRAINT list_items_pr_key PRIMARY KEY,
+                listId int    NOT NULL REFERENCES lists (id) ON DELETE CASCADE,
+                phone  bigint,
+                sent   bool   NOT NULL DEFAULT FALSE
+            );
+        </sql>
+        <rollback>
+            DROP TABLE listItems;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.07.19-00:30" author="serfeo">
+        <comment>Create campaign lists table</comment>
+        <sql>
+            CREATE TABLE campaignsLists
+            (
+                id         serial NOT NULL
+                    CONSTRAINT campaigns_lists_pr_key PRIMARY KEY,
+                listId     int    NOT NULL REFERENCES lists (id) ON DELETE CASCADE,
+                campaignId int    NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE
+            );
+        </sql>
+        <rollback>
+            DROP TABLE campaignsLists;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.10.19-18:40" author="serfeo">
+        <comment>Add errorStatus column to campaign table</comment>
+        <sql>
+            ALTER TABLE campaigns
+                ADD COLUMN errorStatus VARCHAR(200);
+        </sql>
+        <rollback>
+            ALTER TABLE campaigns DROP COLUMN errorStatus;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="16.10.19-19:30" author="serfeo">
+        <comment>Create phones lists table</comment>
+        <sql>
+            CREATE TABLE phones
+            (
+                id     serial NOT NULL
+                    CONSTRAINT phones_lists_pr_key PRIMARY KEY,
+                userId int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                phone  bigint,
+                date   bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE phones;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="17.10.19-18:35" author="serfeo">
+        <comment>Create chats table</comment>
+        <sql>
+            CREATE TABLE chats
+            (
+                id          serial NOT NULL
+                    CONSTRAINT chats_pr_key PRIMARY KEY,
+                userId      int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                phoneFrom   bigint,
+                phoneTo     bigint,
+                lastDate    bigint,
+                lastMessage text,
+                read        bool   NOT NULL DEFAULT true
+            );
+        </sql>
+        <rollback>
+            DROP TABLE chats;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="17.10.19-18:45" author="serfeo">
+        <comment>Create chat messages table</comment>
+        <sql>
+            CREATE TABLE chatMessages
+            (
+                id         serial NOT NULL
+                    CONSTRAINT chat_messages_pr_key PRIMARY KEY,
+                chatId     int    NOT NULL REFERENCES chats (id) ON DELETE CASCADE,
+                inbound    bool,
+                externalId varchar(36),
+                read       bool   NOT NULL DEFAULT true,
+                date       bigint,
+                message    text
+            );
+        </sql>
+        <rollback>
+            DROP TABLE chatMessages;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="21.07.19-22:30" author="serfeo">
+        <comment>Create campaign phones table</comment>
+        <sql>
+            CREATE TABLE campaignPhones
+            (
+                id         serial NOT NULL
+                    CONSTRAINT campaign_phones_pr_key PRIMARY KEY,
+                phoneId    int    NOT NULL REFERENCES phones (id) ON DELETE CASCADE,
+                campaignId int    NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE
+            );
+        </sql>
+        <rollback>
+            DROP TABLE campaignPhones;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="22.10.19-14:40" author="serfeo">
+        <comment>Add phone from column to chat messages table</comment>
+        <sql>
+            ALTER TABLE chatMessages
+                ADD COLUMN phoneFrom bigint;
+        </sql>
+        <rollback>
+            ALTER TABLE chatMessages DROP COLUMN phoneFrom;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="22.10.19-18:00" author="serfeo">
+        <comment>Add hasInbound column to chats table</comment>
+        <sql>
+            ALTER TABLE chats
+                ADD COLUMN hasInbound bool NOT NULL default false;
+        </sql>
+        <rollback>
+            ALTER TABLE chats DROP COLUMN hasInbound;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.10.19-14:10" author="serfeo">
+        <comment>Create dnc lists table</comment>
+        <sql>
+            CREATE TABLE dncLists
+            (
+                id     serial NOT NULL
+                    CONSTRAINT dnc_lists_pr_key PRIMARY KEY,
+                userId int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                date   bigint,
+                cnt    bigint,
+                name   varchar(100)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE dncLists;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.10.19-14:20" author="serfeo">
+        <comment>Create dnc list items table</comment>
+        <sql>
+            CREATE TABLE dncListItems
+            (
+                id     serial NOT NULL
+                    CONSTRAINT dnc_list_items_pr_key PRIMARY KEY,
+                listId int    NOT NULL REFERENCES dncLists (id) ON DELETE CASCADE,
+                phone  bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE dncListItems;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.10.19-14:40" author="serfeo">
+        <comment>Add dnc count column to campaign table</comment>
+        <sql>
+            ALTER TABLE campaigns
+                ADD COLUMN dncCount bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE campaigns DROP COLUMN dncCount;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="25.10.19-14:20" author="serfeo">
+        <comment>Create campaign errors table</comment>
+        <sql>
+            CREATE TABLE campaignErrors
+            (
+                id         serial NOT NULL
+                    CONSTRAINT campaign_errors_pr_key PRIMARY KEY,
+                campaignId int    NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
+                phone      bigint,
+                error      text,
+                date       bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE campaignErrors;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="25.10.19-14:40" author="serfeo">
+        <comment>Add errors count column to campaign table</comment>
+        <sql>
+            ALTER TABLE campaigns
+                ADD COLUMN errorsCount bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE campaigns DROP COLUMN errorsCount;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="29.10.19-16:00" author="serfeo">
+        <comment>Add date column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN date bigint NOT NULL DEFAULT 1570626002620;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN date;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="30.10.19-14:40" author="serfeo">
+        <comment>Add balance column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN balance float NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN balance;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="30.10.19-14:45" author="serfeo">
+        <comment>Create settings table</comment>
+        <sql>
+            CREATE TABLE settings
+            (
+                id   serial NOT NULL
+                    CONSTRAINT settings_pr_key PRIMARY KEY,
+                skey VARCHAR(100),
+                sval VARCHAR(100)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE settings;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="30.10.19-14:50" author="serfeo">
+        <comment>Create pin codes table</comment>
+        <sql>
+            CREATE TABLE pinCodes
+            (
+                id    serial NOT NULL
+                    CONSTRAINT pin_codes_pr_key PRIMARY KEY,
+                phone bigint,
+                code  int
+            );
+        </sql>
+        <rollback>
+            DROP TABLE pinCodes;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="30.10.19-15:20" author="serfeo">
+        <comment>Init settings table</comment>
+        <sql>
+            INSERT INTO settings(skey, sval)
+            VALUES ('phone.system', '');
+            INSERT INTO settings(skey, sval)
+            VALUES ('price.phone', '');
+            INSERT INTO settings(skey, sval)
+            VALUES ('phone.sms', '');
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey in ('phone.system', 'price.phone', 'phone.sms');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.11.19-15:20" author="serfeo">
+        <comment>Add values to settings table</comment>
+        <sql>
+            INSERT INTO settings(skey, sval)
+            VALUES ('phone.forwarding', '');
+            INSERT INTO settings(skey, sval)
+            VALUES ('price.sms.inbound', '');
+            INSERT INTO settings(skey, sval)
+            VALUES ('price.sms.outbound', '');
+            INSERT INTO settings(skey, sval)
+            VALUES ('phone.limit', '');
+            DELETE
+            FROM settings
+            WHERE skey = 'phone.sms';
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey in ('phone.forwarding', 'price.sms.inbound', 'phone.sms.outbound',
+            'phone.limit');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.11.19-16:30" author="serfeo">
+        <comment>Create transactions table</comment>
+        <sql>
+            CREATE TABLE transactions
+            (
+                id     serial NOT NULL
+                    CONSTRAINT transactions_pr_key PRIMARY KEY,
+                userId int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                type   int,
+                amount float,
+                date   bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE transactions;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.10.19-17:00" author="serfeo">
+        <comment>Add details column to transactions table</comment>
+        <sql>
+            ALTER TABLE transactions
+                ADD COLUMN details varchar(100);
+        </sql>
+        <rollback>
+            ALTER TABLE transactions DROP COLUMN details;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="04.10.19-17:00" author="serfeo">
+        <comment>Add sent count column to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN sentCount bigint;
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN sentCount;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="04.10.19-17:10" author="serfeo">
+        <comment>Add full name column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN fullName varchar(100);
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN fullName;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="05.10.19-14:50" author="serfeo">
+        <comment>Add userId column to settings table</comment>
+        <sql>
+            ALTER TABLE settings
+                ADD COLUMN userId int NOT NULL DEFAULT 1 REFERENCES users (id) ON DELETE CASCADE;
+        </sql>
+        <rollback>
+            ALTER TABLE settings DROP COLUMN userId;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="05.10.19-15:15" author="serfeo">
+        <comment>Add ignored count column to campaign table</comment>
+        <sql>
+            ALTER TABLE campaigns
+                ADD COLUMN ignoredCount bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE campaigns DROP COLUMN ignoredCount;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="05.10.19-15:25" author="serfeo">
+        <comment>Add sent phones table</comment>
+        <sql>
+            CREATE TABLE sentPhones
+            (
+                id    serial NOT NULL
+                    CONSTRAINT sent_phones_pr_key PRIMARY KEY,
+                phone bigint,
+                date  bigint
+            )
+        </sql>
+        <rollback>
+            DROP TABLE sentPhones;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="06.10.19-17:00" author="serfeo">
+        <comment>Add sent count column to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN forwarding bigint;
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN forwarding;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="06.10.19-17:10" author="serfeo">
+        <comment>Add sent count default value in phones table</comment>
+        <sql>
+            UPDATE phones
+            SET sentCount=0;
+            ALTER TABLE phones
+                ALTER COLUMN sentCount SET NOT NULL;
+            ALTER TABLE phones
+                ALTER COLUMN sentCount SET DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE phones ALTER COLUMN sentCount TYPE bigint;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="06.10.19-17:20" author="serfeo">
+        <comment>Add ignored count column to lists table</comment>
+        <sql>
+            ALTER TABLE lists
+                ADD COLUMN ignored bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE lists DROP COLUMN ignored;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="06.10.19-17:30" author="serfeo">
+        <comment>Add dnc count column to lists table</comment>
+        <sql>
+            ALTER TABLE lists
+                ADD COLUMN dnc bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE lists DROP COLUMN dnc;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="06.10.19-17:40" author="serfeo">
+        <comment>Add dnc count column to lists table</comment>
+        <sql>
+            ALTER TABLE lists
+                ADD COLUMN errors bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE lists DROP COLUMN errors;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="06.12.19-16:10" author="serfeo">
+        <comment>Add data column to list items table</comment>
+        <sql>
+            ALTER TABLE listItems
+                ADD COLUMN data varchar(1000);
+        </sql>
+        <rollback>
+            ALTER TABLE listItems DROP COLUMN data;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="28.12.19-18:25" author="serfeo">
+        <comment>Add auto replies table</comment>
+        <sql>
+            CREATE TABLE autoReplies
+            (
+                id       serial NOT NULL
+                    CONSTRAINT auto_replies_pr_key PRIMARY KEY,
+                userId   int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                keywords varchar(1000),
+                message  varchar(1000),
+                date     bigint
+            )
+        </sql>
+        <rollback>
+            DROP TABLE autoReplies;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="09.01.20-16:30" author="serfeo">
+        <comment>Add chargedDate column to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN chargedDate bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN chargedDate;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="15.01.20-16:00" author="serfeo">
+        <comment>Add agents login enabled default setting</comment>
+        <sql>
+            INSERT INTO settings(skey, sval)
+            VALUES ('agents.login.enabled', '0');
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='agents.login.enabled';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="09.01.20-16:35" author="serfeo">
+        <comment>Add agent username and agent password columns to campaigns table</comment>
+        <sql>
+            ALTER TABLE campaigns
+                ADD COLUMN agentUsername varchar(50);
+            ALTER TABLE campaigns
+                ADD COLUMN agentPassword varchar(50);
+        </sql>
+        <rollback>
+            ALTER TABLE campaigns DROP COLUMN agentUsername;
+            ALTER TABLE campaigns DROP COLUMN agentPassword;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="15.01.20-18:35" author="serfeo">
+        <comment>Add campaign id column to chats table</comment>
+        <sql>
+            ALTER TABLE chats
+                ADD COLUMN campaignId int;
+        </sql>
+        <rollback>
+            ALTER TABLE chats DROP COLUMN campaignId;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.01.20-14:30" author="serfeo">
+        <comment>Add reseller id column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN resellerId int NOT NULL DEFAULT 1;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN resellerId;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.01.20-15:20" author="serfeo">
+        <comment>Add reseller number column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN resellerNumber int NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN resellerNumber;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.01.20-15:25" author="serfeo">
+        <comment>Add personal name column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN personalName varchar(50);
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN personalName;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.01.20-15:30" author="serfeo">
+        <comment>Add note column to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN note varchar(200);
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN note;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="29.01.20-16:40" author="serfeo">
+        <comment>Add inbound count column to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN inboundCount bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN inboundCount;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="29.01.20-16:50" author="serfeo">
+        <comment>Add domain column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN domain VARCHAR(500) NOT NULL DEFAULT '';
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN domain;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="03.02.20-21:40" author="serfeo">
+        <comment>Add day sent count column to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN daySentCount bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN daySentCount;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="19.02.20-13:45" author="serfeo">
+        <comment>Add master ignore enabled default setting</comment>
+        <sql>
+            INSERT INTO settings(skey, sval)
+            VALUES ('master.ignore.enabled', '0');
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='master.ignore.enabled';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="19.02.20-13:50" author="serfeo">
+        <comment>Add master ignore enabled default setting</comment>
+        <sql>
+            INSERT INTO settings(skey, sval)
+            VALUES ('master.ignore', '0');
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='master.ignore';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="27.02.19-17:50" author="serfeo">
+        <comment>Add data2 column to list items table</comment>
+        <sql>
+            ALTER TABLE listItems
+                ADD COLUMN data2 varchar(1000);
+        </sql>
+        <rollback>
+            ALTER TABLE listItems DROP COLUMN data2;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="27.02.20-18:25" author="serfeo">
+        <comment>Add last campaign date column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN lastCampaignDate bigint DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN lastCampaignDate;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="29.02.20-18:45" author="serfeo">
+        <comment>Add carrier ignore enabled default setting</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('carrier.ignore.enabled', '0', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='carrier.ignore.enabled';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="29.02.20-18:50" author="serfeo">
+        <comment>Add carrier ignore default settings</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('carrier.ignore.verizon', '0', 1);
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('carrier.ignore.att', '0', 1);
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('carrier.ignore.t-mobile', '0', 1);
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('carrier.ignore.sprint', '0', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE carrier='master.ignore.verizon';
+            DELETE FROM settings WHERE carrier='master.ignore.att';
+            DELETE FROM settings WHERE carrier='master.ignore.t-mobile';
+            DELETE FROM settings WHERE carrier='master.ignore.sprint';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.03.20-13:10" author="serfeo">
+        <comment>Add manual column to chat messages table</comment>
+        <sql>
+            ALTER TABLE chatMessages
+                ADD COLUMN manual BOOL NOT NULL DEFAULT false;
+        </sql>
+        <rollback>
+            ALTER TABLE chatMessages DROP COLUMN manual;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="03.03.20-17:20" author="serfeo">
+        <comment>Add lookup price value to settings table</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('price.lookup', '0.0015', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='price.lookup';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="12.03.20-14:55" author="serfeo">
+        <comment>Add admin messages table</comment>
+        <sql>
+            CREATE TABLE adminMessages
+            (
+                id      serial  NOT NULL
+                    CONSTRAINT admin_messages_pr_key PRIMARY KEY,
+                userId  int     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                message varchar(1000),
+                read    boolean NOT NULL DEFAULT FALSE,
+                date    bigint
+            )
+        </sql>
+        <rollback>
+            DROP TABLE adminMessages;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="26.03.20-15:45" author="serfeo">
+        <comment>Add phones bulk forward enabled default setting</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('phones.bulk.forward.enabled', '0', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='phones.bulk.forward.enabled';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="05.04.20-18:30" author="serfeo">
+        <comment>Add origin column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN origin int NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN origin;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="08.04.20-18:30" author="serfeo">
+        <comment>Add listId, sent index to listItems table</comment>
+        <sql>
+            CREATE INDEX listItems_listId_sent_ids on listItems (listId, sent);
+        </sql>
+        <rollback>
+            DROP INDEX listItems_listId_sent_ids;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="14.04.20-18:30" author="serfeo">
+        <comment>Add last sent date to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN lastSentDate bigint NOT NULL DEFAULT 1586872053564;
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN lastSentDate;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.04.20-18:30" author="serfeo">
+        <comment>Add toll free property to phones table</comment>
+        <sql>
+            ALTER TABLE phones
+                ADD COLUMN tollFree BOOL NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE phones DROP COLUMN tollFree;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="23.04.20-19:00" author="serfeo">
+        <comment>Add received count column to lists table</comment>
+        <sql>
+            ALTER TABLE lists
+                ADD COLUMN receivedCount bigint NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE lists DROP COLUMN receivedCount;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="30.04.20-14:50" author="serfeo">
+        <comment>Add allow manage money column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN allowManageMoney bool NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN allowManageMoney;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="13.05.20-14:50" author="serfeo">
+        <comment>Add allow sub users payments column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN allowSubUsersPayments bool NOT NULL DEFAULT TRUE;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN allowSubUsersPayments;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="15.05.20-14:50" author="serfeo">
+        <comment>Add filterDNC column to campaigns table</comment>
+        <sql>
+            ALTER TABLE campaigns
+                ADD COLUMN filterDNC bool NOT NULL DEFAULT TRUE;
+        </sql>
+        <rollback>
+            ALTER TABLE campaigns DROP COLUMN filterDNC;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="19.05.20-17:10" author="serfeo">
+        <comment>Insert master dnc lists</comment>
+        <sql>
+            INSERT INTO dncLists(userId, date, cnt, name)
+            VALUES (1, 1589897536929, 0, 'Master DNC');
+        </sql>
+        <rollback>
+            DELETE FROM dncLists WHERE name='Master DNC';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="31.05.20-14:50" author="serfeo">
+        <comment>Add allow payments column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN allowPayments bool NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN allowPayments;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="31.05.20-14:55" author="serfeo">
+        <comment>Add blocked column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN blocked bool NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN blocked;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="10.06.20-16:35" author="serfeo">
+        <comment>Add timezone name column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN timezoneName VARCHAR(50);
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN timezoneName;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="10.06.20-16:45" author="serfeo">
+        <comment>Add timezone offset column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN timezoneOffset INT NOT NULL DEFAULT -6;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN timezoneOffset;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.06.20-16:45" author="serfeo">
+        <comment>Init chat carrier lookup enabled settings</comment>
+        <sql>
+            INSERT INTO settings(userId, skey, sval)
+            VALUES (1, 'chat.carrier.lookup.enabled', '0');
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE userId=1 and skey='chat.carrier.lookup.enabled';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.06.20-16:55" author="serfeo">
+        <comment>Init chat carrier lookup settings</comment>
+        <sql>
+            INSERT INTO settings(userId, skey, sval)
+            VALUES (1, 'chat.carrier.lookup', '0');
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE userId=1 and skey='chat.carrier.lookup';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="101.06.20-17:00" author="serfeo">
+        <comment>Add carrier column to chats table</comment>
+        <sql>
+            ALTER TABLE chats
+                ADD COLUMN carrier VARCHAR(100);
+        </sql>
+        <rollback>
+            ALTER TABLE chats DROP COLUMN carrier;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="02.07.20-16:05" author="serfeo">
+        <comment>Add notes table</comment>
+        <sql>
+            CREATE TABLE notes
+            (
+                id      serial NOT NULL
+                    CONSTRAINT notes_pr_key PRIMARY KEY,
+                userId  int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                message text,
+                date    bigint
+            )
+        </sql>
+        <rollback>
+            DROP TABLE notes;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="08.06.20-16:45" author="serfeo">
+        <comment>Add download lists enabled default setting</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('download.lists.enabled', '0', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='download.lists.enabled';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="20.12.20-20:50" author="serfeo">
+        <comment>Init settings table</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('unanswered.messages.count', '150', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey in ('unanswered.messages.count');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="20.12.20-20:55" author="serfeo">
+        <comment>Init settings table</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('unanswered.messages.time', '60', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey in ('unanswered.messages.time');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.17.21-21:10" author="serfeo">
+        <comment>Create detailedTransactions table</comment>
+        <sql>
+            CREATE TABLE detailedTransactions
+            (
+                id     serial NOT NULL
+                    CONSTRAINT detailed_transactions_pr_key PRIMARY KEY,
+                userId int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                type   int,
+                amount float,
+                date   bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE detailedTransactions;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.17.21-21:15" author="serfeo">
+        <comment>Add userId index to detailedTransactions table</comment>
+        <sql>
+            CREATE INDEX detailed_transaction_user_id_ids on detailedTransactions (userId);
+        </sql>
+        <rollback>
+            DROP INDEX detailed_transaction_user_id_ids;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.17.21-21:20" author="serfeo">
+        <comment>Add date index to detailedTransactions table</comment>
+        <sql>
+            CREATE INDEX detailed_transaction_date_ids on detailedTransactions (date);
+        </sql>
+        <rollback>
+            DROP INDEX detailed_transaction_date_ids;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="02.05.21-20:55" author="serfeo">
+        <comment>Add dns words to settings table</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('dnc.words', '', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey in ('dnc.words');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="02.05.21-21:10" author="serfeo">
+        <comment>Change settings table sval column</comment>
+        <sql>
+            ALTER TABLE settings ALTER COLUMN sval TYPE TEXT;
+        </sql>
+        <rollback>
+            ALTER TABLE settings ALTER COLUMN sval TYPE VARCHAR(100);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="21.08.21-19:50" author="serfeo">
+        <comment>Add allow transactions view column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN allowTransactionsView bool NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN allowTransactionsView;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="21.08.21-20:50" author="serfeo">
+        <comment>Add allow sub users transactions view column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN allowSubUsersTransactionsView bool NOT NULL DEFAULT TRUE;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN allowSubUsersTransactionsView;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="11.11.21-13:45" author="wsdev">
+        <comment>Add consumer dnc upload filter default setting</comment>
+        <sql>
+            INSERT INTO settings(skey, sval, userId)
+            VALUES ('consumerdnc.upload.filter.ignore', '0', 1);
+        </sql>
+        <rollback>
+            DELETE FROM settings WHERE skey='consumerdnc.upload.filter.ignore';
+        </rollback>
+    </changeSet>
+    <changeSet id="11.14.21-11:45" author="wsdev">
+        <comment>Changing name length of campaigns</comment>
+        <sql>
+            ALTER TABLE lists ALTER COLUMN "name" TYPE TEXT;
+        </sql>
+        <rollback>
+            ALTER TABLE lists ALTER COLUMN "name" TYPE VARCHAR(100);
+        </rollback>
+    </changeSet>
+    <changeSet id="12.08.21-11:49" author="wsdev">
+        <comment>Create kycInfo table</comment>
+        <sql>
+            CREATE TABLE kycinfo
+            (
+                id                    serial NOT NULL
+                    CONSTRAINT kycinfo_pr_key PRIMARY KEY,
+                userId                int    NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                companyName           varchar(255),
+                brandName             varchar(255),
+                companyCountry        varchar(255),
+                companyTaxId          varchar(255),
+                businessTypeId        int,
+                companyWebsite        varchar(255),
+                companyStockExchange  varchar(255),
+                companyAddressStreet  varchar(255),
+                companyAddressZip     varchar(255),
+                companyAddressCity    varchar(255),
+                companyAddressState   varchar(255),
+                companyAddressCountry varchar(255),
+                contactFirstName      varchar(255),
+                contactLastName       varchar(255),
+                contactPhone          varchar(255),
+                contactEmail          varchar(255),
+                billingEmail          varchar(255),
+                contactTollFreePhone  varchar(255),
+                supportEmail          varchar(255),
+                lastUpdate            bigint
+            );
+        </sql>
+        <rollback>
+            DROP TABLE kycinfo;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="24.12.21-13:45" author="wsdev">
+        <comment>Add businessindustryid column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD businessindustryid int4 NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN businessindustryid;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="24.12.21-13:50" author="wsdev">
+        <comment>Add businessposition column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD businessposition varchar(255) NOT NULL DEFAULT '';
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN businessposition;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="24.12.21-13:51" author="wsdev">
+        <comment>Add businesstitle column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD businesstitle varchar(255) NOT NULL DEFAULT '';
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN businesstitle;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="24.12.21-13:52" author="wsdev">
+        <comment>Add confirmedprovidercontact column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD confirmedprovidercontact bool NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN confirmedprovidercontact;
+        </rollback>
+    </changeSet>
+    <changeSet id="24.12.21-13:53" author="wsdev">
+        <comment>Add confirmedterms column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD confirmedterms bool NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN confirmedterms;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.02.22-14:55" author="wsdev">
+        <comment>Add disabled column to users table</comment>
+        <sql>
+            ALTER TABLE users
+                ADD COLUMN disabled bool NOT NULL DEFAULT TRUE;
+        </sql>
+        <rollback>
+            ALTER TABLE users DROP COLUMN disabled;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.05.01-14:55" author="wsdev">
+        <comment>Add useCaseId column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD COLUMN useCaseId int4 NOT NULL DEFAULT 0;
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN useCaseId;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.05.01-15:55" author="wsdev">
+        <comment>Add relevantAttributesIds column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD COLUMN relevantAttributesIds VARCHAR(255) NOT NULL DEFAULT '0';
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN relevantAttributesIds;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.05.01-16:55" author="wsdev">
+        <comment>Add campaignDescription column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD COLUMN campaignDescription VARCHAR(255) NOT NULL DEFAULT '';
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN campaignDescription;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.05.01-17:55" author="wsdev">
+        <comment>Add messageSample column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD COLUMN messageSample VARCHAR(255) NOT NULL DEFAULT '';
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN messageSample;
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="01.06.22-14:55" author="wsdev">
+        <comment>Add completed column to kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo
+                ADD COLUMN completed bool NOT NULL DEFAULT FALSE;
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo DROP COLUMN completed;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.09.22-14:55" author="wsdev">
+        <comment>Changing messagesample column datatype from kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo ALTER COLUMN messagesample TYPE text USING messagesample::text;
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo ADD messagesample varchar(255) NOT NULL DEFAULT ''::character varying;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="01.09.23-14:55" author="wsdev">
+        <comment>Changing campaigndescription column datatype from kycinfo table</comment>
+        <sql>
+            ALTER TABLE kycinfo ALTER COLUMN campaigndescription TYPE text USING campaigndescription::text;
+        </sql>
+        <rollback>
+            ALTER TABLE kycinfo ADD campaigndescription varchar(255) NOT NULL DEFAULT ''::character varying;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

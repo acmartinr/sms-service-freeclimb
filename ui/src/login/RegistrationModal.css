@@ -1,0 +1,12 @@
+.custom-registration-dialog .MuiPaper-root {
+  width: 400px;
+}
+
+.custom-registration-dialog h5 {
+  font-size: 12px;
+}
+
+.custom-progress-registration-details {
+  width: 30px !important;
+  height: 30px !important;
+}

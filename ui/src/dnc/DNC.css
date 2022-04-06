@@ -1,0 +1,12 @@
+.action-cell {
+  width: 120px;
+}
+
+button.MuiFab-root {
+  right: 50px !important;
+}
+
+.custom-progress-dnc-details {
+  width: 30px !important;
+  height: 30px !important;
+}

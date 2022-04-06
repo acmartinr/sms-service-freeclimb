@@ -1,0 +1,15 @@
+.custom-group-dialog .MuiPaper-root {
+  width: 600px;
+}
+
+.custom-group-dialog h5 {
+  font-size: 12px;
+}
+
+.checkbox-cell {
+  width: 60px;
+}
+
+.custom-group-dialog td {
+  padding: 3px 24px 3px 16px;
+}

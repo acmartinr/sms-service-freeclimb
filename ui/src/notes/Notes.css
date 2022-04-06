@@ -1,0 +1,36 @@
+.note-button-wrapper {
+  padding-top: 16px;
+  text-align: right;
+  padding-bottom: 10px;
+}
+
+.note-add-button {
+}
+
+.note-wrapper {
+  margin-top: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.note-date {
+  padding-bottom: 10px;
+}
+
+.note-icons-wrapper {
+  width: 60px;
+  display: inline-block;
+  float: right;
+}
+
+.note-icons-wrapper svg {
+  font-size: 20px !important;
+}
+
+.note-message {
+  display: block;
+  margin-top: 10px;
+  width: 100%;
+  font-size: 1rem;
+}

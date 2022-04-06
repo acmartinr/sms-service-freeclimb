@@ -1,0 +1,11 @@
+.action-cell {
+  width: 120px;
+}
+
+.action-cell-checkbox {
+  width: 30px;
+}
+
+.phones-table td {
+  padding: 0px !important;
+}

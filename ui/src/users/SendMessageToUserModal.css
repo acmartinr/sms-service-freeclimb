@@ -1,0 +1,16 @@
+.custom-user-messages-dialog .MuiPaper-root {
+  width: 600px;
+}
+
+.message-unread {
+  background: #e2f2fb91;
+}
+
+.admin-message-input {
+  width: calc(100% - 70px);
+}
+
+.admin-message-button {
+  margin-left: 5px !important;
+  margin-top: 15px !important;
+}

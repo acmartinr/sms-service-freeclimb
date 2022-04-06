@@ -1,0 +1,14 @@
+.prices-action-cell {
+  width: 60px;
+}
+
+.users-select {
+  width: 100%;
+  margin-bottom: 16px !important;
+}
+
+.settings-select {
+  margin-top: 6px !important;
+  margin-bottom: 6px !important;
+  width: 100%;
+}

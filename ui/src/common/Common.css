@@ -1,0 +1,161 @@
+.max-width-800 {
+  max-width: 800px;
+  margin: auto;
+}
+
+.max-width-1000 {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.max-width-600 {
+  max-width: 600px;
+  margin: auto;
+}
+
+.max-width-400 {
+  max-width: 400px;
+  margin: auto;
+}
+
+.right {
+  float: right;
+}
+
+.space {
+  display: block;
+  height: 10px;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.inline {
+  display: inline;
+}
+
+.padding-right-10 {
+  padding-right: 10px !important;
+}
+
+.padding-left-15 {
+  padding-left: 15px !important;
+}
+
+.space-20 {
+  display: block;
+  height: 20px;
+}
+
+.space-10 {
+   display: block;
+   height: 5px;
+ }
+
+.right-margin-10 {
+  margin-right: 10px;
+}
+
+.margin-top-20 {
+  margin-top: 20px !important;
+}
+
+.margin-top-10 {
+  margin-top: 10px !important;
+}
+
+.margin-right-10 {
+  margin-right: 10px !important;
+}
+
+.margin-left-10 {
+  margin-left: 10px !important;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 20px !important;
+}
+
+.margin-bottom-10 {
+  margin-bottom: 10px !important;
+}
+
+.dashboard-root {
+  margin-top: 70px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.dashboard-toolbar {
+  padding-right: 24;
+}
+
+.dashboard-toolbar-icon {
+  display: 'flex';
+  alignItems: 'center';
+  justify-content: 'flex-end';
+  padding: 0 8px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.no-margin {
+  margin: 0px !important;
+}
+
+.center {
+  margin: 0px auto !important;
+  display: block !important;
+}
+
+.MuiDrawer-paper.MuiDrawer-paperAnchorLeft {
+  z-index: 0 !important;
+  padding-top: 58px !important;
+}
+
+.action-icon {
+  margin-right: 10px;
+}
+
+.custom-remove-progress {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.padding-top-10 {
+  padding-top: 10px !important;
+}
+
+.margin-top-30 {
+  margin-top: 30px !important;
+}
+
+.transactions-title {
+  font-weight: bold;
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding-top: 15px;
+  font-size: 0.875rem;
+}
+
+.transactions-date-picker {
+  width: 150px;
+}
+
+.transactions-statistics-title {
+  display: block;
+  margin-top: 10px;
+}
+
+.transactions-search-with-button {
+  width: calc(100% - 310px) !important;
+  margin-right: 10px !important;
+}
+
+.key-column {
+  width: 300px;
+}

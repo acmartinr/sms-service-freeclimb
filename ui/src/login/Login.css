@@ -1,0 +1,74 @@
+.login-paper {
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form {
+  width: '100%';
+  margin-top: 8px;
+}
+
+.login-submit {
+  margin-top: 16px !important;
+}
+
+.registration-button, .forgot-password-button {
+  color: #3f51b5;
+  font-size: 0.875rem;
+  display: inline-block;
+  width: 50%;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.registration-button {
+  text-align: left;
+}
+
+.forgot-password-button {
+  text-align: right;
+}
+
+.padding-bottom-0 {
+  padding-bottom: 0px !important;
+}
+
+.terms-of-use-link {
+  padding-left: 5px;
+  color: #3f51b5;
+}
+
+.terms-of-use-span {
+  font-size: 12px;
+}
+
+.error-checkbox, .error-checkbox svg {
+  color: #f44335;
+}
+
+.login-message {
+  margin-top: 5px;
+  color: #43a047;
+}
+
+.logo-image {
+  width: 40px;
+  display: inline-block;
+  vertical-align: bottom;
+  position: relative;
+  top: 1px;
+}
+
+.login-title-text {
+  font-size: 18px !important;
+}
+
+.functions-list li {
+  font-size: 16px !important;
+}
+
+.penny-logo {
+  padding-bottom: 10px;
+}

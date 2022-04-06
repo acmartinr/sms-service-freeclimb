@@ -1,0 +1,8 @@
+.settings-action-cell {
+  width: 60px;
+}
+
+.account-settings-table td {
+  padding-left: 0px !important;
+  border: none !important;
+}

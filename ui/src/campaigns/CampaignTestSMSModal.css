@@ -1,0 +1,14 @@
+.test-sms-campaign-dialog .MuiPaper-root {
+  width: 350px;
+}
+
+.test-sms-campaign-dialog h5 {
+  font-size: 12px;
+}
+
+.custom-progress {
+  width: 30px !important;
+  height: 30px !important;
+  margin: 20px 10px 16px 16px;
+  display: inline-block;
+}

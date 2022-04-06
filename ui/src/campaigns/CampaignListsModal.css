@@ -1,0 +1,16 @@
+.custom-lists-dialog .MuiPaper-root {
+  width: 800px;
+  max-width: 800px !important;
+}
+
+.custom-lists-dialog h5 {
+  font-size: 12px;
+}
+
+.checkbox-cell {
+  width: 60px;
+}
+
+.custom-listsC-dialog td {
+  padding: 3px 24px 3px 16px;
+}

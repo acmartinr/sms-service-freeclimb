@@ -1,0 +1,25 @@
+.action-cell {
+  width: 120px;
+}
+
+.large-action-cell {
+  width: 280px;
+}
+
+.populate-button {
+  position: absolute !important;
+  top: 128px;
+  right: 16px;
+  z-index: 1000;
+  height: 30px !important;
+  padding: 0px 10px !important;
+}
+
+.table-wrapper {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.filter-dnc {
+  margin-left: 0px !important;
+}

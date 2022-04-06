@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="services.database.mapper.UserMapper">
+
+    <select id="getUsersByRequest" resultType="User">
+        SELECT * FROM users WHERE
+        <if test="resellerId > 0">
+            resellerId=#{resellerId} AND
+        </if>
+        origin=0 AND
+        (fullName ILIKE #{search} OR username ILIKE #{search} OR personalName ILIKE #{search})
+        ORDER by ${order} <if test="orderDesc"> DESC </if>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getUsersCountByRequest" resultType="Integer">
+        SELECT count(id) FROM users WHERE
+        <if test="resellerId > 0">
+            resellerId=#{resellerId} AND
+        </if>
+        origin=0 AND
+        (fullName ILIKE #{search} OR username ILIKE #{search} OR personalName ILIKE #{search})
+    </select>
+
+    <select id="gePaymentsByRequest" resultType="Payment">
+        SELECT amount, fullName as username, transactions.date, transactions.details FROM transactions
+        JOIN users ON transactions.userId=users.id
+        WHERE (details='added with Stripe' OR details='added by admin')
+        <if test="resellerId > 0">
+            AND users.resellerId=#{resellerId}
+        </if>
+        ORDER by date DESC LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getPaymentsCountByRequest" resultType="Integer">
+        SELECT count(users.id) FROM transactions
+        JOIN users ON transactions.userId=users.id
+        WHERE (details='added with Stripe' OR details='added by admin')
+        <if test="resellerId > 0">
+            AND users.resellerId=#{resellerId}
+        </if>
+    </select>
+
+    <select id="getAllTransactionsByRequest" resultType="Transaction">
+        SELECT detailedTransactions.type, detailedTransactions.amount, detailedTransactions.date,
+               users.fullName as username
+        FROM detailedTransactions
+        LEFT JOIN users ON detailedTransactions.userId = users.id
+        WHERE (users.fullName ILIKE #{search} OR users.username ILIKE #{search})
+        <if test="userId > 0">
+            AND userId=#{userId}
+        </if>
+        AND detailedTransactions.date>#{startDate} AND detailedTransactions.date&lt;#{endDate}
+        ORDER by date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getAllTransactionsCountByRequest" resultType="Integer">
+        SELECT count(detailedTransactions.id)
+        FROM detailedTransactions
+        LEFT JOIN users ON detailedTransactions.userId = users.id
+        WHERE (users.fullName ILIKE #{search} OR users.username ILIKE #{search})
+        <if test="userId > 0">
+            AND userId=#{userId}"
+        </if>
+        AND detailedTransactions.date>#{startDate} AND detailedTransactions.date&lt;#{endDate}
+    </select>
+
+</mapper>
+
