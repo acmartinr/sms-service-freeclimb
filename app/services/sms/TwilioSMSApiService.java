@@ -165,23 +165,6 @@ public class TwilioSMSApiService implements ISMSApiService {
         }
         return released;
     }
-    @Override
-    public String sendVoice(Long phoneTo, Long phoneFrom, String message, long userId) {
-        try {
-            Call response = sendVoice(phoneTo, phoneFrom, message, false);
-
-            if (response.getSid() != null  && userId != -1) {
-                return null;
-            }
-            return null;
-        } catch (Exception e) {
-            //TODO DROP IN PRODUCTION
-            return e.getMessage();
-        }
-//        if (response.getSid() != null && userId != -1) {
-//            scheduleRequestingSMSDetails(response.getMessageSid(), userId, response.getSentDate());
-//        }
-    }
 
     @Override
     public String sendSMS(Long phoneTo, Long phoneFrom, String message, long userId) {

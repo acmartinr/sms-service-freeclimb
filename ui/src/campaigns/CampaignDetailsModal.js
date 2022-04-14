@@ -43,7 +43,6 @@ class CampaignDetailsModal extends Component {
     var state = {};
     if (props.selectedCampaign && props.selectedCampaign.id) {
       state = {
-        campaigntype: props.selectedCampaign.campaigntype,
         name: props.selectedCampaign.name,
         id: props.selectedCampaign.id,
         title: 'Update Campaign',
@@ -293,7 +292,6 @@ class CampaignDetailsModal extends Component {
       saturday: this.state.days[5].selected,
       sunday: this.state.days[6].selected,
       filterDNC: this.state.filterDNC,
-      campaigntype: this.state.campaigntype
     }
 
     this.setState({nameUniqueError: false, senderError: false, messageError: false, forbiddenMessage: ''});
@@ -399,9 +397,7 @@ class CampaignDetailsModal extends Component {
 
     textArea.focus();
   }
-  changeCampaignType(value) {
-    this.setState({campaigntype: value});
-   }
+  
   /*handleChange(event) {
     this.setState({
       senderError: false,
@@ -465,20 +461,6 @@ class CampaignDetailsModal extends Component {
             onClick={(e) => this.addPopulateTag()} color="primary">
             Populate
           </Button>
-
-          <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={this.state.campaigntype}
-                      label="Select type"
-                      onChange={(event) => {
-                        this.changeCampaignType(event.target.value)
-                      }}
-                    >
-                      <MenuItem value={"SMS"}>SMS</MenuItem>
-                      <MenuItem value={"VOICE"}>VOICE BROADCAST</MenuItem>
-                      <MenuItem value={"VOICE_SMS"}>VOICE and SMS</MenuItem>
-                    </Select>
 
           <TextField
             className="full-width"

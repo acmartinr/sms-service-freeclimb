@@ -263,25 +263,7 @@ class Campaigns extends Component {
     return Session.getUser().role === 2;
   }
   
-  changeCampaignType(value,id) {
-   var campaign = this.state.campaigns.filter(
-      function(data){
-        return data.id == id;
-      }
-    );
-    campaign[0].campaigntype = value;
-    console.log(id);
-    CampaignsAPI.createCampaign(campaign[0],
-      response => {
-        if (response.status === 'OK') {
-          console.log("Campaign was updated");
-        } else {
-          if (response.message.indexOf("name") !== -1) {
-            this.setState({nameUniqueError: true});
-          }
-        }
-      });
-  }
+
 
   render() {
     if (Session.isAuthenticated() && this.isLimitedUser()) {
@@ -342,7 +324,6 @@ class Campaigns extends Component {
               {!isMobile && <TableCell>Errors</TableCell>}
               {!isMobile && <TableCell>Ignored</TableCell>}
               {!isMobile && <TableCell>Created Date</TableCell>}
-              {!isMobile && <TableCell>Campaign type</TableCell>}
               <TableCell
                 className={
                   isMobile || this.isLimitedUser() ? "" : "large-action-cell"
@@ -370,9 +351,6 @@ class Campaigns extends Component {
                 {!isMobile && <TableCell>{row.ignoredCount}</TableCell>}
                 {!isMobile && (
                   <TableCell>{this.prettyDate(row.date, true)}</TableCell>
-                )}
-                {!isMobile && (
-                 <TableCell>{row.campaigntype}</TableCell>
                 )}
                 <TableCell>
                   {row.errorStatus && (

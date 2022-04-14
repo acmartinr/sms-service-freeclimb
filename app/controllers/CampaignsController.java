@@ -434,7 +434,7 @@ ApiVersion: 2010-04-01
         }
 
         List<String> boughtPhones = smsApiService.buyPhones(buyPhonesRequest.getPhones());
-        if (buyPhonesRequest.getPhones().size() > 0) {
+        if (boughtPhones.size() > 0) {
             buyPhonesRequest.setPhones(buyPhonesRequest.getPhones());
             campaignDAO.insertPhones(buyPhonesRequest);
 

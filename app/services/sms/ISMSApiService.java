@@ -17,9 +17,6 @@ public interface ISMSApiService {
 
     String sendSMS(Long phoneTo, Long phoneFrom, String message, long userId);
 
-    String sendVoice(Long phoneTo, Long phoneFrom, String message, long userId);
-   // String sendScheduleSms(Long phoneTo, Long phoneFrom, String message, long userId,int seconds);
-
     void requestInboundMessages();
 
     String getCarrierInfo(Long phone);

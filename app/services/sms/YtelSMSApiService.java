@@ -258,11 +258,6 @@ public class YtelSMSApiService implements ISMSApiService {
         return response.getErrorMessage();
     }
 
-    @Override
-    public String sendVoice(Long phoneTo, Long phoneFrom, String message, long userId) {
-        return null;
-    }
-
     private void scheduleRequestingSMSDetails(String messageSid, long userId, Date sentDate) {
         try {
             Thread.sleep(10000);

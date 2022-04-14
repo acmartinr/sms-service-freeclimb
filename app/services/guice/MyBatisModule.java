@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import play.db.Database;
+import services.sms.FreeclimbSMSApiService;
 import services.sms.ISMSApiService;
 import services.sms.TelnexSMSApiService;
 import services.sms.TwilioSMSApiService;
@@ -26,7 +27,8 @@ public class MyBatisModule extends org.mybatis.guice.MyBatisModule {
         addSimpleAliases("services.database.model");
 
 //        bind(ISMSApiService.class).to(YtelSMSApiService.class);
-        bind(ISMSApiService.class).to(TwilioSMSApiService.class);
+        //bind(ISMSApiService.class).to(TwilioSMSApiService.class);
+        bind(ISMSApiService.class).to(FreeclimbSMSApiService.class);
     }
 
     @Singleton

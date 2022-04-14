@@ -282,10 +282,6 @@ public class TelnexSMSApiService implements ISMSApiService {
         return sendSMS(phoneTo, phoneFrom, message, false);
     }
 
-    @Override
-    public String sendVoice(Long phoneTo, Long phoneFrom, String message, long userId) {
-        return null;
-    }
 
     private String sendSMS(Long phoneTo, Long phoneFrom, String message, boolean repeated) {
         try {

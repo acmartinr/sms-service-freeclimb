@@ -46,7 +46,6 @@ public class SMSService {
 
     private void startCampaignBackground(Campaign campaign) {
 
-
         Map<Integer, Set<Long>> dncPhonesMap =
                 campaignDAO.generateDNCPhonesMap(campaignDAO.getDNCListByName(DNCList.MAIN));
 
@@ -156,23 +155,11 @@ public class SMSService {
                         if (heldPhones.contains(toPhone.getPhone()) && countHeldPhones / (double) countTotalSent <= 0.25) {
                             countHeldPhones++;
                         } else {
-                            if(campaign.getCampaigntype().equals("SMS")){
+                            System.out.println("Sending sms");
                                 errorMessage = smsApiService.sendSMS(
                                         toPhone.getPhone(), fromPhone.getPhone(),
                                         campaign.getFormattedMessage(toPhone.getData(), toPhone.getData2()),
                                         campaign.getUserId());
-                            }else if(campaign.getCampaigntype().equals("VOICE")){
-                                errorMessage = smsApiService.sendVoice(
-                                        toPhone.getPhone(), fromPhone.getPhone(),
-                                        campaign.getFormattedMessage(toPhone.getData(), toPhone.getData2()),
-                                        campaign.getUserId());
-                                System.out.println("sending Voice campaign");
-                            }else{
-                                errorMessage = null;
-                                System.out.println("sending SMS and Voice campaign");
-
-                            }
-
                         }
 
                         if (errorMessage == null) {
