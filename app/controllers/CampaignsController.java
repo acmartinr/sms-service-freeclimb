@@ -74,7 +74,7 @@ public class CampaignsController extends Controller {
     }
 
     @With(LoggingAction.class)
-    public Result messageStatus(Http.Request request) {
+    public Result messageStatus_old(Http.Request request) {
        // response
         /*
         SmsSid: SM2xxxxxx
@@ -107,6 +107,24 @@ ApiVersion: 2010-04-01
         return ok(Json.toJson(CommonResponse.OK()));
     }
 
+
+
+    @With(LoggingAction.class)
+    public Result messageStatus(Http.Request request) {
+        Map<String, String[]> data = request.body().asFormUrlEncoded();
+        /*
+        try {
+            Chat message = smsApiService.parseInboundMessage(data);
+            logger.info("From:" + message.getPhoneFrom() + "   to: " + message.getPhoneTo() + "   body:" + message.getLastMessage());
+            handleIncomeMessage(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }*/
+        System.out.println(request.body().asFormUrlEncoded().toString());
+        return ok();
+    }
+
     @With(LoggingAction.class)
     public Result statistics(Http.Request request) {
         CommonRequest commonRequest = Json.fromJson(request.body().asJson(), CommonRequest.class);
@@ -117,7 +135,6 @@ ApiVersion: 2010-04-01
                 campaignDAO.getSMSSentCountByUserId(commonRequest.getUserId())
         ))));
     }
-
     @With(LoggingAction.class)
     public Result campaigns(Http.Request request) {
         CommonRequest commonRequest = Json.fromJson(request.body().asJson(), CommonRequest.class);
