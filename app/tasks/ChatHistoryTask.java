@@ -33,18 +33,20 @@ public class ChatHistoryTask {
     }
 
     private void initialize() {
-        /*List<Campaign> campaigns = campaignDAO.getAllCampaigns();
+/*
+        List<Campaign> campaigns = campaignDAO.getAllCampaigns();
         for (Campaign campaign: campaigns) {
             campaignDAO.updateLeadsCount(campaign);
-        }*/
+        }
 
-        /*actorSystem.scheduler().schedule(
+        actorSystem.scheduler().schedule(
             Duration.create(0, TimeUnit.SECONDS),
             Duration.create(10, TimeUnit.SECONDS),
             chatHistoryActor,
             "Wake up, Neo...",
             executionContext,
-            ActorRef.noSender());*/
+            ActorRef.noSender());
+*/
     }
 
 }

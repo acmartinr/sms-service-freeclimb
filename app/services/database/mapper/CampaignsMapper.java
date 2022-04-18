@@ -195,17 +195,22 @@ public interface CampaignsMapper {
 
     void copyChat(Chat chat);
 
+
+
     @Insert("INSERT INTO chatMessages_${userId}(chatId, message, date, inbound, read, externalId, phoneFrom, manual) " +
             "VALUES (#{message.chatId}, #{message.message}, #{message.date}, #{message.inbound}, #{message.read}, " +
             "#{message.externalId}, #{message.phoneFrom}, #{message.manual})")
     void insertChatMessage(@Param("userId") long userId,
                            @Param("message") ChatMessage chatMessage);
 
-    @Update("UPDATE chats_${userId} SET lastDate=#{lastDate}, lastMessage=#{lastMessage}, read=#{read} WHERE id = #{id}")
+    @Update("UPDATE chats_${userId} SET lastDate=#{lastDate}, lastMessage=#{lastMessage}, read=#{read},hasinbound = #{hasInbound} WHERE id = #{id}")
     void updateChatLastMessageAndDate(Chat chat);
 
     @Select("SELECT * FROM chats")
     List<Chat> getAllChats();
+
+    @Select("SELECT * FROM chats_${userId}")
+    List<Chat> getChatsById(@Param("userId") String userId);
 
     @Update("UPDATE senders SET sentCount=sentCount+1 WHERE id=#{id}")
     void incrementSenderSentCountById(@Param("id") long id);

@@ -203,7 +203,7 @@ public class TwilioSMSApiService implements ISMSApiService {
 
      */
     @Override
-    public void requestInboundMessages() {
+    public void requestInboundMessages(String userId) {
         logger.info("Sending #requestInboundMessages request");
         List<Chat> chats = campaignDAO.getAllChats();
         for (Chat chat : chats) {

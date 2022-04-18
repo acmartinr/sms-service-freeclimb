@@ -17,7 +17,7 @@ public interface ISMSApiService {
 
     String sendSMS(Long phoneTo, Long phoneFrom, String message, long userId);
 
-    void requestInboundMessages();
+    void requestInboundMessages(String userId);
 
     String getCarrierInfo(Long phone);
 

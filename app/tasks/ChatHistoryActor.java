@@ -15,6 +15,6 @@ class ChatHistoryActor extends AbstractActor {
 
     @Override
     public Receive createReceive() {
-        return receiveBuilder().matchAny(o -> smsApiService.requestInboundMessages()).build();
+        return receiveBuilder().matchAny(o -> smsApiService.requestInboundMessages("")).build();
     }
 }

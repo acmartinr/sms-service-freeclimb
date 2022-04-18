@@ -134,6 +134,8 @@
         VALUES (#{userId}, #{campaignId}, #{phoneTo}, #{phoneFrom}, #{carrier}, #{lastDate}, #{lastMessage}, #{read}, #{hasInbound})
     </insert>
 
+
+
     <insert id="insertPhonesForCampaign">
         INSERT INTO campaignPhones(campaignId, phoneId) VALUES
         <foreach item="phone" collection="selectedPhones" separator=",">

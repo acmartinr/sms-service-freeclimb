@@ -116,7 +116,7 @@ public class SMSService {
                     }
 
                     user = userDAO.getUserById(campaign.getUserId());
-                    if (user != null && user.getBalance() < price) {
+                    if (user != null && user .getBalance() < price) {
                         campaignDAO.updateCampaignErrorStatusById(campaign.getId(), "Your balance is too low");
                         campaignDAO.updateCampaignStatusById(campaign.getId(), 0);
 
@@ -124,7 +124,6 @@ public class SMSService {
                     }
 
                     CampaignListItem toPhone = campaignDAO.getNotSentPhoneFromListAndUpdateStatus(list.getId());
-
                     if (toPhone != null) {
 
                         allListsEmpty = false;

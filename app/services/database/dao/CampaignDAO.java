@@ -7,6 +7,7 @@ import model.CommonRequest;
 import org.mybatis.guice.transactional.Transactional;
 import services.database.mapper.CampaignsMapper;
 import services.database.model.*;
+import services.sms.model.FreeClimbSendSMSResponse;
 import services.sms.model.SMSApiMessage;
 
 import java.io.FileWriter;
@@ -362,7 +363,9 @@ public class CampaignDAO {
     public List<Chat> getAllChats() {
         return mapper.getAllChats();
     }
-
+    public List<Chat> getChatsById(String userId) {
+        return mapper.getChatsById(userId);
+    }
     public void incrementSenderSentCountById(long id) {
         mapper.incrementSenderSentCountById(id);
     }
@@ -389,6 +392,28 @@ public class CampaignDAO {
         return false;
     }
 
+    public boolean updateFreeclimbExternalChatMessage(Chat chat, FreeClimbSendSMSResponse message) {
+        if (mapper.getChatMessageByExternalId(chat.getUserId(), message.getMessageId()) == null) {
+            mapper.insertChatMessage(
+                    chat.getUserId(),
+                    new ChatMessage(
+                            chat.getId(), message.getText(),
+                            true, 1000000,
+                            false, message.getMessageId(),
+                            chat.getPhoneTo(), false));
+
+            chat.setLastMessage(message.getText());
+            chat.setHasInbound(true);
+            chat.setLastDate(1000000);
+            chat.setRead(false);
+
+            mapper.updateChatLastMessageAndDate(chat);
+
+            return true;
+        }
+
+        return false;
+    }
     public List<Chat> getVisibleChatsByUserId(long userId) {
         return mapper.getVisibleChatsByUserId(userId);
     }

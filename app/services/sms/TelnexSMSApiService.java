@@ -333,7 +333,7 @@ public class TelnexSMSApiService implements ISMSApiService {
     }
 
     @Override
-    public void requestInboundMessages() {
+    public void requestInboundMessages(String userId) {
 
     }
 

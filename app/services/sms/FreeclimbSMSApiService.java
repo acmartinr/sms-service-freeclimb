@@ -27,13 +27,16 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static common.Utils.formatPhone;
+
 public class FreeclimbSMSApiService implements ISMSApiService{
     private CampaignDAO campaignDAO;
     final Logger logger = LoggerFactory.getLogger("access");
     private static String BASE_URL = "https://www.freeclimb.com/apiserver";
-    private static String ACCOUNT_SID = "AC1303985d31355c460fbbdcf7c28a5d4c484f0d48";
-    private static String AUTH_TOKEN = "37b4305221be1bc55432d88037075be512d39984";
-
+    //private static String ACCOUNT_SID = "AC1303985d31355c460fbbdcf7c28a5d4c484f0d48";
+  //  private static String AUTH_TOKEN = "37b4305221be1bc55432d88037075be512d39984";
+    private static String ACCOUNT_SID = "AC1dfabc1a88561ddc6a7708f0bf42ab6d4339c496";
+    private static String AUTH_TOKEN = "efa18fa8e69243225c5318dc819da6cdbff9fee4";
 
     @Inject
     public FreeclimbSMSApiService(CampaignDAO campaignDAO) {
@@ -91,7 +94,7 @@ public class FreeclimbSMSApiService implements ISMSApiService{
                 Map<String, String> contentMap = new HashMap<>();
                 contentMap.put("phoneNumber", phone);
                 String content = new ObjectMapper().writeValueAsString(contentMap);
-                Response response = sendPostRequest(content, "https://www.freeclimb.com/apiserver/Accounts/AC1303985d31355c460fbbdcf7c28a5d4c484f0d48/IncomingPhoneNumbers");
+                Response response = sendPostRequest(content, "https://www.freeclimb.com/apiserver/Accounts/"+ACCOUNT_SID+"/IncomingPhoneNumbers");
                 if (response.code() == 202) {
                     String stringBody = response.body().string();
                     System.out.println(stringBody);
@@ -274,12 +277,10 @@ public class FreeclimbSMSApiService implements ISMSApiService{
     }
 
     @Override
-    public void requestInboundMessages() {
+    public void requestInboundMessages(String userId) {
         logger.info("Sending #requestInboundMessages request");
-        List<Chat> chats = campaignDAO.getAllChats();
-        System.out.println(chats.size());
+        List<Chat> chats = campaignDAO.getChatsById(userId);
         for (Chat chat : chats) {
-
             requestInboundMessage(chat);
             try {
                 Thread.sleep(1000);
@@ -375,20 +376,30 @@ public class FreeclimbSMSApiService implements ISMSApiService{
         try {
             logger.info("Sending #requestInboundMessage request for phone from: " + chat.getPhoneFrom());
             FreeclimbSmsListResponse pl = new FreeclimbSmsListResponse();
-            String content = "?to=12324323523&beginTime=2021-01-10&endTime=1&direction=inbound";
+           // String content = "?to=%2B18324971456&beginTime=2021-01-10&endTime=1&direction=inbound";
+            String content = "?to=%2B18324971456&direction=inbound";
+         /*   content = content
+                    .replace("{startDate}", formatPhone(chat.getPhoneTo()).toString())
+                    .replace("{date}", dateFormat.format(new Date()));
+
+          */
             //  contentMap.put("to", formatPhone(chat.getPhoneTo()));
             //  contentMap.put("beginTime", ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC")).toString());
             // String content = new ObjectMapper().writeValueAsString(contentMap);
-            Response response = sendGetRequest("https://www.freeclimb.com/apiserver/"+ACCOUNT_SID+"/Messages/" + content);
-            System.out.println("https://www.freeclimb.com/apiserver/"+ACCOUNT_SID+"/Messages/"+content);
+            Response response = sendGetRequest("https://www.freeclimb.com/apiserver/Accounts/"+ACCOUNT_SID+"/Messages" + content);
+           // System.out.println("https://www.freeclimb.com/apiserver/"+ACCOUNT_SID+"/Messages/"+content);
             if (response.code() == 200) {
                 String stringBody = response.body().string();
                 System.out.println(stringBody);
                 logger.info(stringBody);
                 ObjectMapper mapper = new ObjectMapper();
                 pl = mapper.readValue(stringBody, FreeclimbSmsListResponse.class);
+              //  System.out.println(pl.getMessages().get(0).getText());
+                for (FreeClimbSendSMSResponse message : pl.getMessages()) {
+                    campaignDAO.updateFreeclimbExternalChatMessage(chat, message);
+                }
             }else{
-
+                System.out.println(response.body().string());
             }
         } catch (Exception e) {
             e.printStackTrace();

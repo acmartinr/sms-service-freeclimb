@@ -490,9 +490,11 @@ ApiVersion: 2010-04-01
 
     @With(LoggingAction.class)
     public Result chats(Http.Request request) {
+        //Read all Inbound chats from smsApiservices
         CommonRequest commonRequest = Json.fromJson(request.body().asJson(), CommonRequest.class);
 
         User user = Utils.getCurrentUser(request, userDAO);
+        smsApiService.requestInboundMessages(String.valueOf(user.getId()));
         if (user == null) {
             return forbidden();
         }

@@ -21,6 +21,8 @@ public class FreeClimbSendSMSResponse {
     String to;
     @JsonProperty("text")
     String text;
+    @JsonProperty("info")
+    String info;
     @JsonProperty("direction")
     String direction;
     @JsonProperty("notificationUrl")
@@ -50,6 +52,7 @@ public class FreeClimbSendSMSResponse {
         this.status = "";
         this.applicationId = "";
         this.phoneNumberId = "";
+        this.info = "";
     }
 
     public String getUri() {
@@ -79,6 +82,13 @@ public class FreeClimbSendSMSResponse {
         return dateCreated;
     }
 
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }

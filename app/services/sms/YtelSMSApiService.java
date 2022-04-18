@@ -703,7 +703,7 @@ public class YtelSMSApiService implements ISMSApiService {
         return new LinkedList();
     }
 
-    public void requestInboundMessages() {
+    public void requestInboundMessages(String userId) {
         List<Chat> chats = campaignDAO.getAllChats();
         for (Chat chat : chats) {
             requestInboundMessage(chat);
