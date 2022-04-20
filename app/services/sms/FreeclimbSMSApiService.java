@@ -329,7 +329,7 @@ public class FreeclimbSMSApiService implements ISMSApiService{
             contentMap.put("to", formatPhone(phoneTo));
             contentMap.put("from", formatPhone(phoneFrom));
             contentMap.put("text", message);
-            contentMap.put("notificationUrl", "http://dev.wsdevworld.com:9000/api/outbond/status");
+            contentMap.put("notificationUrl", "http://66.175.233.84:9000/api/outbond/status");
             String content = new ObjectMapper().writeValueAsString(contentMap);
             Response response = sendPostRequest(content, "https://www.freeclimb.com/apiserver/Accounts/"+ACCOUNT_SID+"/Messages");
             if (response.code() == 202) {

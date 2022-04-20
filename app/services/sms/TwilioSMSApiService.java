@@ -61,9 +61,9 @@ public class TwilioSMSApiService implements ISMSApiService {
             for (String phone : phones) {
                 IncomingPhoneNumber incomingPhoneNumber = IncomingPhoneNumber.creator(
                                 new com.twilio.type.PhoneNumber(phone))
-                        .setSmsUrl(URI.create("http://dev.wsdevworld.com:9000/api/inbound"))
-                        .setVoiceUrl(URI.create("http://dev.wsdevworld.com:9000/api/forward/twilio"))
-                        .setStatusCallback(URI.create("http://dev.wsdevworld.com:9000/api/outbond/status"))
+                        .setSmsUrl(URI.create("http://66.175.233.84:9000/api/inbound"))
+                        .setVoiceUrl(URI.create("http://66.175.233.84:9000/api/forward/twilio"))
+                        .setStatusCallback(URI.create("http://66.175.233.84:9000/api/outbond/status"))
                         .create();
                 boughtPhones.add(incomingPhoneNumber.getPhoneNumber().encode(StandardCharsets.UTF_8.toString()));
             }
@@ -302,7 +302,7 @@ public class TwilioSMSApiService implements ISMSApiService {
                             message).setSendAt(
                             ZonedDateTime.ofInstant(sendWhen.toInstant(), ZoneId.of("UTC")))
                     .setScheduleType(Message.ScheduleType.FIXED)
-                    .setStatusCallback(URI.create("http://dev.wsdevworld.com:9000/api/outbond/status"))
+                    .setStatusCallback(URI.create("http://66.175.233.84:9000/api/outbond/status"))
                     .create();
             logger.info("Message sent: " + messageResponse.getSid());
 
@@ -354,7 +354,7 @@ public class TwilioSMSApiService implements ISMSApiService {
                             new com.twilio.type.PhoneNumber(formatPhone(phoneTo)),
                             new com.twilio.type.PhoneNumber(formatPhone(phoneFrom)),
                             message)
-                    .setStatusCallback(URI.create("http://dev.wsdevworld.com:9000/api/outbond/status"))
+                    .setStatusCallback(URI.create("http://66.175.233.84:9000/api/outbond/status"))
                     .create();
             logger.info("Message sent: " + messageResponse.getSid());
 
