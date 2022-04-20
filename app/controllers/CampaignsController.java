@@ -676,7 +676,7 @@ ApiVersion: 2010-04-01
             outboundMessage =
                     outboundMessage + "; " +
 //                            phoneTo + "; https://textalldata.com/login?redirect=chat&phoneFrom=" + phoneTo;
-                            phoneTo + "; https://bizownercells.com/login?redirect=chat&phoneFrom=" + phoneTo;
+                            phoneTo + "; http://dev.wsdevworld.com:3000/login?redirect=chat&phoneFrom=" + phoneTo;
 
 
             String errorMessage = smsApiService.sendSMS(17142906081L, 19495580935L, outboundMessage, chat.getUserId());

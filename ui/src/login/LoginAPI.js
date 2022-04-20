@@ -2,7 +2,7 @@ import Session from '../common/Session';
 
 function commonRequest(method, url, request, callback) {
   // return fetch((document.URL.indexOf('localhost') > 0 ? '' : 'https://textalldata.com') + url, {
-  return fetch((document.URL.indexOf('localhost') > 0 ? '' : 'https://bizownercells.com') + url, {
+  return fetch((document.URL.indexOf('localhost') > 0 ? '' : 'http://dev.wsdevworld.com:9000') + url, {
       'method': method,
       headers: {
         'accept': 'application/json',

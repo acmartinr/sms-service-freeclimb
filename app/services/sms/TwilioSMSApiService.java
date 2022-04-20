@@ -61,9 +61,9 @@ public class TwilioSMSApiService implements ISMSApiService {
             for (String phone : phones) {
                 IncomingPhoneNumber incomingPhoneNumber = IncomingPhoneNumber.creator(
                                 new com.twilio.type.PhoneNumber(phone))
-                        .setSmsUrl(URI.create("https://bizownercells.com/api/inbound"))
-                        .setVoiceUrl(URI.create("https://bizownercells.com/api/forward/twilio"))
-                        .setStatusCallback(URI.create("https://bizownercells.com/api/outbond/status"))
+                        .setSmsUrl(URI.create("http://dev.wsdevworld.com:9000/api/inbound"))
+                        .setVoiceUrl(URI.create("http://dev.wsdevworld.com:9000/api/forward/twilio"))
+                        .setStatusCallback(URI.create("http://dev.wsdevworld.com:9000/api/outbond/status"))
                         .create();
                 boughtPhones.add(incomingPhoneNumber.getPhoneNumber().encode(StandardCharsets.UTF_8.toString()));
             }
@@ -302,7 +302,7 @@ public class TwilioSMSApiService implements ISMSApiService {
                             message).setSendAt(
                             ZonedDateTime.ofInstant(sendWhen.toInstant(), ZoneId.of("UTC")))
                     .setScheduleType(Message.ScheduleType.FIXED)
-                    .setStatusCallback(URI.create("https://bizownercells.com/api/outbond/status"))
+                    .setStatusCallback(URI.create("http://dev.wsdevworld.com:9000/api/outbond/status"))
                     .create();
             logger.info("Message sent: " + messageResponse.getSid());
 

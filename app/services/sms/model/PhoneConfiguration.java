@@ -47,7 +47,7 @@ public class PhoneConfiguration {
 
     public PhoneConfiguration() {
         this.friendlyName = "";
-        this.voiceUrl = "https://bizownercells.com/api/forward";
+        this.voiceUrl = "http://dev.wsdevworld.com:9000/api/forward";
         this.voiceMethod = "POST";
         this.voiceFallbackUrl = "";
         this.voiceFallbackMethod = "";
@@ -55,7 +55,7 @@ public class PhoneConfiguration {
         this.hangupCallbackMethod = "";
         this.heartbeatUrl = "";
         this.heartbeatMethod = "";
-        this.smsUrl = "https://bizownercells.com/api/inbound";
+        this.smsUrl = "http://dev.wsdevworld.com:9000/api/inbound";
         this.smsMethod = "Post";
         this.smsFallbackUrl = "";
         this.smsFallbackMethod = "";
