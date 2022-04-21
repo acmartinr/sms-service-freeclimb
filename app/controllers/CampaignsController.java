@@ -138,7 +138,6 @@ ApiVersion: 2010-04-01
     @With(LoggingAction.class)
     public Result campaigns(Http.Request request) {
         CommonRequest commonRequest = Json.fromJson(request.body().asJson(), CommonRequest.class);
-
         User user = Utils.getCurrentUser(request, userDAO);
         if (user != null && user.getRole() == User.LIMITED) {
             commonRequest.setAgentUsername(user.getUsername());
@@ -176,9 +175,10 @@ ApiVersion: 2010-04-01
     @With(LoggingAction.class)
     public Result addCampaign(Http.Request request) {
         Campaign campaign = Json.fromJson(request.body().asJson(), Campaign.class);
-
+        System.out.println(request.body().asJson());
         Campaign dbCampaign = campaignDAO.getCampaignByName(campaign.getName(), campaign.getUserId());
         if (dbCampaign != null && campaign.getId() != dbCampaign.getId()) {
+            System.out.println(CommonResponse.ERROR("name"));
             return ok(Json.toJson(CommonResponse.ERROR("name")));
         }
 
